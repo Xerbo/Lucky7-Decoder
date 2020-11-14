@@ -1,6 +1,6 @@
 # Lucky 7 Image Decoder
 
-A small C++ program for decoding images from the Lucky-7 cubesat, included are GNURadio flowgraphs for both IQ and FM/AF recordings as well as some sample data from [Derek (OK9SGC)](https://twitter.com/ok9sgc) and 
+A small C++ program for decoding images from the Lucky-7 cubesat, included are GNURadio flowgraphs for both IQ and FM/AF recordings as well as some sample data from [Derek (@OK9SGC)](https://twitter.com/ok9sgc) and [FelixTRG (@OK9UWU)](https://twitter.com/ok9uwu).
 
 ## Usage
 
