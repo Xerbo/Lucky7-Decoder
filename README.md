@@ -34,6 +34,13 @@ If you're using the FM/AF demod:
 3. Change the path on the WAV file source to that of your recording
 4. Select a sane output path and click run
 
+## Exmaple images
+
+Some exmaple images recieved by amatuers with a SDR setup and decoded with this decoder (converted to PNG so they show consistently across devices)
+
+![An image recieved by Derek (OK9SGC) on 13/11/2020](Sample_Data/13.11.2020-Derek.png)
+![The same image but recieved by FelixTRG (OK9UWU)](Sample_Data/13.11.2020-FelixTRG.png)
+
 ## Protocol
 
 FSK demod, framing, CRC and descrambling is all handled by GNURadio and gr-satellites, and therefore won't be described in this section.
