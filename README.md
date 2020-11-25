@@ -18,7 +18,7 @@ Then to actually run it:
 
 ## Demodulation
 
-You will need the awesome [gr-satellites](https://github.com/daniestevez/gr-satellites) installed in order to use the flowgraphs.
+You will need the awesome [gr-satellites](https://github.com/daniestevez/gr-satellites) installed in order to use the flowgraphs (example data available [here](https://cloud.xerbo.net/s/jGFk7WNygFoG54T), both IQ and AF).
 
 If you're using the IQ demod:
 
