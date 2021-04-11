@@ -1,0 +1,53 @@
+name: Build and create release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install apt dependencies
+      run: 'sudo apt-get update && sudo apt-get install -y g++ mingw-w64'
+
+    - name: Compile for linux
+      run: g++ -Wall -O2 -o Lucky7-Decoder main.cpp
+
+    - name: Compile for Windows
+      run: x86_64-w64-mingw32-g++ -Wall -O2 -o Lucky7-Decoder.exe main.cpp
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: A release wow
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Linux binary
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: Lucky7-Decoder
+        asset_name: Lucky7-Decoder
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Upload Windows binary
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: Lucky7-Decoder.exe
+        asset_name: Lucky7-Decoder.exe
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
