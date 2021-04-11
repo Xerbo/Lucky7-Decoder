@@ -20,7 +20,7 @@ jobs:
       run: g++ -Wall -O2 -o Lucky7-Decoder main.cpp
 
     - name: Compile for Windows
-      run: x86_64-w64-mingw32-g++ -Wall -O2 -o Lucky7-Decoder.exe main.cpp
+      run: x86_64-w64-mingw32-g++ -static-libgcc -static-libstdc++ -Wall -O2 -o Lucky7-Decoder.exe main.cpp
 
     - name: Create Release
       uses: actions/create-release@v1
