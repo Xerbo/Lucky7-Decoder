@@ -40,6 +40,7 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: Lucky7-Decoder
         asset_name: Lucky7-Decoder
+        asset_content_type: application/x-sharedlib
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
@@ -49,5 +50,6 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: Lucky7-Decoder.exe
         asset_name: Lucky7-Decoder.exe
+        asset_content_type: application/x-dosexec
       env:
         GITHUB_TOKEN: ${{ github.token }}
