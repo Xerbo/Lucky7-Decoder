@@ -1,19 +1,21 @@
 # Lucky 7 Image Decoder
 
-A small C++ program for decoding images from the Lucky-7 cubesat, included are GNURadio flowgraphs for both IQ and FM/AF recordings as well as some sample data from [Derek (@OK9SGC)](https://twitter.com/ok9sgc) and [FelixTRG (@OK9UWU)](https://twitter.com/ok9uwu).
+A small C++ program for decoding images from the Lucky-7 cubesat, included are GNURadio flowgraphs for both IQ and FM/AF recordings as well as some sample data from [Derek (@dereksgc)](https://twitter.com/dereksgc) and [FelixTRG (@OK9UWU)](https://twitter.com/ok9uwu).
 
 ## Usage
 
-Since the project currently consists of only a single source file with no dependencies apart from the standard library, compiling is done manually:
+Compiled binaries for both Windows and Linux are available in the [releases](https://github.com/Xerbo/Lucky7-Decoder/releases) page.
 
-```
-g++ -Wall -O2 -o Lucky7-Decoder main.cpp
-```
-
-Then to actually run it:
+After downloading a release you can run it with:
 
 ```
 ./Lucky7-Decoder input.bin output.jpg
+```
+
+Or (if you are on Windows)
+
+```
+Lucky7-Decoder.exe input.bin output.jpg
 ```
 
 ## Demodulation
@@ -22,38 +24,38 @@ You will need the awesome [gr-satellites](https://github.com/daniestevez/gr-sate
 
 If you're using the IQ demod:
 
-1. Figure out the sample rate of your recording, say 96000hz
+1. Figure out the sample rate of your recording, say 93750hz
 2. Change the sample rate in the flowgraph to match that
-3. Change the path on the WAV file source to that of your SDR# IQ recording (input can be changed to F32 rather easily)
+3. Change the path of the "File Source" to that of your SDR# IQ recording
 4. Select a sane output path and click run
 
 If you're using the FM/AF demod:
 
 1. Figure out the sample rate of your recording, say 48000hz
 2. Change the sample rate in the flowgraph to match that
-3. Change the path on the WAV file source to that of your recording
+3. Change the path of the "WAV File Source" to that of your recording
 4. Select a sane output path and click run
 
-## Exmaple images
+## Example images
 
-Some exmaple images recieved by amatuers with a SDR setup and decoded with this decoder (converted to PNG so they show consistently across devices)
+Some example images received by amateurs with a SDR setup and decoded with this decoder (converted to PNG to show consistently across devices)
 
-![An image recieved by Derek (OK9SGC) on 13/11/2020](Sample_Data/13.11.2020-Derek.png)
-![The same image but recieved by FelixTRG (OK9UWU)](Sample_Data/13.11.2020-FelixTRG.png)
+![An image received by Derek (@dereksgc) on 13/11/2020](Sample_Data/13.11.2020-Derek.png)
+![The same image but received by FelixTRG (@OK9UWU)](Sample_Data/13.11.2020-FelixTRG.png)
 
 ## Protocol
 
-FSK demod, framing, CRC and descrambling is all handled by GNURadio and gr-satellites, and therefore won't be described in this section.
+GMSK demodulation, deframing, CRC and descrambling are all handled by gr-satellites, and therefore won't be covered in this section, if you are interested in this check out [Daniel Estévez's blog post](https://destevez.net/2019/07/lucky-7-decoded/).
 
-Frames are laid out as such:
+Each packet is laid out as following  
 
- - 1 byte that marks what sort of data is being transmitted (effectively a VCID)
- - 2 bytes for the counter
- - 2 bytes for a copy of the first but with the first 2 bits set to 0 (???)
- - 2 bytes for the number of packets for this transmission
+ - 1 byte for the OBC ID
+ - 2 bytes for the OBC's counter
+ - 2 bytes for the MCU's counter
+ - 2 bytes for the length of the data being transmitted (in number of packets)
  - 28 bytes of actual data
 
-When an image transmission starts the first counter will always be set to `0xC000` and the first 4 bytes of the JPEG will always be `0xFFD8FFDB`, however due to the nature of the downlink and how missed segments can be resent if needed it is required to sort the frames by their counter and remove repeated frames in order to get a valid data output. After you have the raw data you can just concatenate all the data and write it directly to a JPEG file.
+Whenever an image is being transmitted the OBC's counter will start at `0xC000` and the first bytes of the JPEG will always be `0xFFD8FFDB`, however due to the nature of the downlink and how missing packets can be retransmitted it is required that the decoder can deal with repeated packets. After this you can just concatenate the data from each packet into a normal JPEG file.
 
 ## License
 
