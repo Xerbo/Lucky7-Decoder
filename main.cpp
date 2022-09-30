@@ -1,5 +1,5 @@
 /*
- * Lucky7-Decoder -  A small C++ program for decoding images from the Lucky-7 cubesat 
+ * Lucky7-Decoder -  A small C++ program for decoding images from the Lucky-7 cubesat
  * Copyright (C) 2021 Xerbo (xerbo@protonmail.com)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,6 @@
 #define FRAME_DATA_SIZE 28
 
 struct Frame {
-	uint8_t ID;
 	uint16_t Counter;
 	uint16_t Length;
 	uint8_t Data[FRAME_DATA_SIZE];
@@ -51,7 +50,6 @@ struct Telemetry {
 
 Frame parseFrame(uint8_t *in) {
 	Frame frame;
-	frame.ID       = in[0];
 	frame.Counter  = in[1] << 8 | in[2];
 	frame.Length   = in[5] << 8 | in[6];
 	std::memcpy(frame.Data, &in[7], FRAME_DATA_SIZE);
@@ -120,17 +118,17 @@ int main(int argc, char *argv[]) {
 
 		Frame frame = parseFrame(buffer);
 
-		if(frame.ID == 0x80 && frame.Counter == 0){
+		if (frame.Counter == 0){
 			parseTelemetry(frame);
 		}
-		if (frame.ID == 0x80 && frame.Counter >= 0xC000) {
+		if (frame.Counter >= 0xC000) {
 			image_frames[frame.Counter - 0xC000] = frame;
-			length = frame.Length;	
+			length = frame.Length;
 		}
 	}
 
 	for (size_t i = 0; i < length; i++) {
-		if (image_frames[i].ID != 0) data_out.write((char *)&image_frames[i].Data, FRAME_DATA_SIZE);
+		data_out.write((char *)&image_frames[i].Data, FRAME_DATA_SIZE);
 	}
 
 	data_in.close();
