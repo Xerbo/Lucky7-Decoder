@@ -28,7 +28,7 @@
 struct Frame {
 	uint16_t Counter;
 	uint16_t Length;
-	uint8_t Data[FRAME_DATA_SIZE];
+	uint8_t Data[FRAME_SIZE];
 };
 
 struct Telemetry {
@@ -52,7 +52,7 @@ Frame parseFrame(uint8_t *in) {
 	Frame frame;
 	frame.Counter  = in[1] << 8 | in[2];
 	frame.Length   = in[5] << 8 | in[6];
-	std::memcpy(frame.Data, &in[7], FRAME_DATA_SIZE);
+	std::memcpy(frame.Data, in, FRAME_SIZE);
 
 	return frame;
 }
@@ -60,20 +60,20 @@ Frame parseFrame(uint8_t *in) {
 void parseTelemetry(Frame in) {
 	Telemetry telm;
 
-	telm.Callsign.append((char *)&in.Data[0], (char *)&in.Data[5]);
-	telm.SatelliteName.append((char *)&in.Data[5], (char *)&in.Data[11]);
-	telm.TotalResetCounter = in.Data[11] << 8 | in.Data[12];
-	telm.SwapResetCounter = in.Data[13] << 8 | in.Data[14];
-	telm.BatteryVoltage = in.Data[15];
-	telm.MCUTemperature = in.Data[16];
-	telm.PATemperature = in.Data[17];
-	telm.ProcessorCurrent = in.Data[18];
-	telm.MCUVoltage3V3 = in.Data[19];
-	telm.MCUVoltage1V2 = in.Data[20];
-	telm.AngularRateXAxis = in.Data[21] << 8 | in.Data[22];
-	telm.AngularRateYAxis = in.Data[23] << 8 | in.Data[24];
-	telm.AngularRateZAxis = in.Data[25] << 8 | in.Data[26];
-	telm.AntennaBurnwire = in.Data[27] == 1;
+	telm.Callsign.append((char *)&in.Data[6], (char *)&in.Data[12]);
+	telm.SatelliteName.append((char *)&in.Data[12], (char *)&in.Data[18]);
+	telm.TotalResetCounter = in.Data[18] << 8 | in.Data[19];
+	telm.SwapResetCounter = in.Data[20] << 8 | in.Data[21];
+	telm.BatteryVoltage = in.Data[22];
+	telm.MCUTemperature = in.Data[23];
+	telm.PATemperature = in.Data[24];
+	telm.ProcessorCurrent = in.Data[25];
+	telm.MCUVoltage3V3 = in.Data[26];
+	telm.MCUVoltage1V2 = in.Data[27];
+	telm.AngularRateXAxis = in.Data[28] << 8 | in.Data[29];
+	telm.AngularRateYAxis = in.Data[30] << 8 | in.Data[31];
+	telm.AngularRateZAxis = in.Data[32] << 8 | in.Data[33];
+	telm.AntennaBurnwire = in.Data[34] == 1;
 
 	std::cout << "Telemetry Packet:" << std::endl;
 	std::cout << "  Callsign: " << telm.Callsign << std::endl;
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	for (size_t i = 0; i < length; i++) {
-		data_out.write((char *)&image_frames[i].Data, FRAME_DATA_SIZE);
+		data_out.write((char *)&image_frames[i].Data[7], FRAME_DATA_SIZE);
 	}
 
 	data_in.close();
